@@ -1,5 +1,6 @@
 package com.mycompany.app.neetcode;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -25,5 +26,20 @@ public class StackSolutionsTest {
     @Test
     public void testGenerateParenthesis() {
         assertEquals(new ArrayList<String>(Arrays.asList("((()))","(()())","(())()","()(())","()()()")), StackSolutions.generateParenthesis(3));
+    }
+
+    @Test
+    public void testDailyTemperatures() {
+        assertArrayEquals(new int [] {1,4,1,2,1,0,0}, StackSolutions.dailyTemperatures(new int[] {30,38,30,36,35,40,28}));
+    }
+
+    @Test 
+    public void testCarFlee() {
+        assertEquals(1, StackSolutions.carFleet(10, new int[] {1,4}, new int[] {3,2}));
+    }
+
+    @Test
+    public void testLargestRectangleArea() {
+        assertEquals(8, StackSolutions.largestRectangleArea(new int[] {7,1,7,2,2,4}));
     }
 }

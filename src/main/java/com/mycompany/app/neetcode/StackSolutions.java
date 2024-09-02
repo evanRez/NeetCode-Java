@@ -1,6 +1,7 @@
 package com.mycompany.app.neetcode;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
@@ -75,5 +76,72 @@ public class StackSolutions {
             parenBacktrack(n, openN, closedN +1, stack, res);
             stack.pop();
         }
+    }
+
+    public static int[] dailyTemperatures(int [] temperatures) {
+        var res = new int[temperatures.length];
+        var stack = new Stack<int[]>();
+        for (var i = 0; i < temperatures.length; i++) {
+          
+            var t = temperatures[i];
+
+            while (!stack.isEmpty() && t > stack.peek()[0]) {
+                int[] pair = stack.pop();
+                res[pair[1]] = (int)(i - pair[1]);
+            }
+
+            stack.push(new int[]{t, i});
+        }
+        return res;
+    }
+
+    public static int carFleet(int target, int[] position, int[] speed) {
+        int n = position.length;
+        var pairs = new double[n][2];
+        for (int i = 0; i < n; i++) {
+            pairs[i][0] = position[i];
+            pairs[i][1] = speed[i];
+        }
+
+        Arrays.sort(pairs, (a, b) -> Double.compare(b[0], a[0])); //desc order
+        
+        int fleetCount = 0;
+        double[] timeToReach = new double[n];
+        for (int i = 0; i < n; i++) {
+            timeToReach[i] = (target - pairs[i][0]) / pairs[i][1]; //linear formula: how many 'turns' it will take to get to finish line
+            if (i >= 1 && timeToReach[i] <= timeToReach[i - 1]) { // i - 1 means car ahead of it by position since arr is desc
+                timeToReach[i] = timeToReach[i -1]; //car can only be as fast as the one ahead of it
+            } else {
+                fleetCount++; //if we don't catch up to car ahead, it's it's own 'fleet'
+            }
+        } 
+        return fleetCount;
+    }
+
+    public static int largestRectangleArea(int[] heights) {
+        int maxArea = 0;
+        var maxStack = new Stack<int[]>();
+
+        for (int i = 0; i < heights.length; i++) {
+            int start = i;
+            while (!maxStack.isEmpty() && maxStack.peek()[1] > heights[i]) {
+                int[] top = maxStack.pop();
+                int idx = top[0];
+                int h = top[1];
+                int w = i - idx;
+                maxArea = Math.max(maxArea, h * w);
+                start = idx;
+            }
+            maxStack.push(new int[]{start, heights[i]});
+        }
+
+        for (int[] pair: maxStack) {
+            int idx = pair[0];
+            int h = pair[1];
+            int w = heights.length - idx;
+            maxArea = Math.max(maxArea, h * w);
+        }
+
+        return maxArea;
     }
 }
