@@ -34,7 +34,7 @@ public class StackSolutionsTest {
     }
 
     @Test 
-    public void testCarFlee() {
+    public void testCarFleet() {
         assertEquals(1, StackSolutions.carFleet(10, new int[] {1,4}, new int[] {3,2}));
     }
 
