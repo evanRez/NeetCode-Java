@@ -62,28 +62,110 @@ public class SlidingWindow {
     }
 
     public static boolean checkInclusion(String s1, String s2) {
-        var hash = new HashMap<Character, Integer>();
-        for (char item : s1.toCharArray()) {
-            hash.put(item, 0);
-        }
-        var total = 0;
-        var result = false;
+        //Fail edge case immediately
+        if (s1.length() > s2.length()) return false;
 
-        for (var i = 0; i < s2.length(); i++) {
-            if (!hash.containsKey(s2.charAt(i))) {
-                hash.replaceAll((k,v) -> 0);
-                total = 0;
-            }
-            hash.putIfAbsent(s2.charAt(i), 1);
+        //Create hashSets for both s1 and the current window
+        var targetMap = new HashMap<Character, Integer>();
+        var windowMap = new HashMap<Character, Integer>();
 
-            for (int val : hash.values()) {
-                total = total + val;
-            }
-            if (total == s1.length()) {
-                result = true;
-                break;
-            } 
+        //initialize the targetSet, can have multiple of same character
+        for (char c : s1.toCharArray()) {
+            targetMap.put(c, targetMap.getOrDefault(c, 0) + 1);
         }
-        return result;
+
+        //Initialize left and right pointers and result var
+        var l = 0;
+        var r = 0;
+
+        //Set up the sliding window
+        while (r < l + s1.length()) {
+            windowMap.put(s2.charAt(r), windowMap.getOrDefault(s2.charAt(r), 0) +1);
+            r++;
+        }
+         //Case when permutation exists return true
+        if (targetMap.equals(windowMap)) {
+            return true;
+        }
+
+        while (r < s2.length()) {
+            //update the windowMap right side
+            var rightChar = s2.charAt(r);
+            windowMap.put(rightChar, windowMap.getOrDefault(rightChar, 0)+1);
+
+            //update windowMap left side
+            var leftChar = s2.charAt(l);
+            if (windowMap.get(leftChar) == 1) {
+                windowMap.remove(leftChar);
+            } else {
+                windowMap.put(leftChar, windowMap.get(leftChar) -1);
+            }
+
+            //Case when permutation exists return true
+            if (targetMap.equals(windowMap)) {
+                return true;
+            }
+
+            //Move the window
+            r++;
+            l++;
+        }
+        return false;
     }
+
+    public static String minWindow(String s, String t) {
+        if (s.length() < t.length()) {
+            return "";
+        }
+    
+        // HashMaps to store frequency of characters in target string
+        var tHash = new HashMap<Character, Integer>();
+        for (char c : t.toCharArray()) {
+            tHash.put(c, tHash.getOrDefault(c, 0) + 1);
+        }
+    
+        // Variables to track the window
+        var compareHash = new HashMap<Character, Integer>();
+        int l = 0, leftIdx = 0, rightIdx = s.length();
+        int minWindowSize = Integer.MAX_VALUE;
+        int matched = 0;  // Number of characters fully matched
+        boolean isValid = false;
+    
+        // Sliding window
+        for (int r = 0; r < s.length(); r++) {
+            char rightChar = s.charAt(r);
+            if (tHash.containsKey(rightChar)) {
+                compareHash.put(rightChar, compareHash.getOrDefault(rightChar, 0) + 1);
+    
+                // Check if we have matched the required frequency of this character
+                if (compareHash.get(rightChar).intValue() == tHash.get(rightChar).intValue()) {
+                    matched++;
+                }
+            }
+    
+            // Shrink the window once all characters are matched
+            while (matched == tHash.size()) {
+                isValid = true;
+                int windowSize = r - l + 1;
+                if (windowSize < minWindowSize) {
+                    minWindowSize = windowSize;
+                    leftIdx = l;
+                    rightIdx = r;
+                }
+    
+                // Shrink window from the left
+                char leftChar = s.charAt(l);
+                if (tHash.containsKey(leftChar)) {
+                    compareHash.put(leftChar, compareHash.get(leftChar) - 1);
+                    if (compareHash.get(leftChar) < tHash.get(leftChar)) {
+                        matched--;
+                    }
+                }
+                l++;  // Move left pointer
+            }
+        }
+    
+        return isValid ? s.substring(leftIdx, rightIdx + 1) : "";
+    }
+    
 }

@@ -1,6 +1,7 @@
 package com.mycompany.app.neetcode;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
@@ -24,5 +25,15 @@ public class SlidingWindowTest {
     @Test
     public void testCheckInclusion() {
         assertTrue(SlidingWindow.checkInclusion("abc", "lecabee"));
+        assertTrue(SlidingWindow.checkInclusion("adc", "dcda"));
+        assertFalse(SlidingWindow.checkInclusion("hello", "ooolleoooleh"));
+    }
+
+    @Test
+    public void testMinWindow() {
+        assertEquals("YXAZ", SlidingWindow.minWindow("OUZODYXAZV", "XYZ"));
+        assertEquals("xyz", SlidingWindow.minWindow("xyz", "xyz"));
+        assertEquals("", SlidingWindow.minWindow("x", "xy"));
+        assertEquals("BANC", SlidingWindow.minWindow("ADOBECODEBANC", "ABC"));
     }
 }
