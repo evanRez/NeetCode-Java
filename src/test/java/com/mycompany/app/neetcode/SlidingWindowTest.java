@@ -40,6 +40,6 @@ public class SlidingWindowTest {
 
     @Test
     public void testMaxSlidingWindow() {
-        assertArrayEquals(new int[] {2,2,4,4,6}, SlidingWindow.maxSlidingWindow(new int[] {1,2,1,0,2,4,6}, 3));
+        assertArrayEquals(new int[] {2,2,4,4,6}, SlidingWindow.maxSlidingWindow(new int[] {1,2,1,0,4,2,6}, 3));
     }
 }

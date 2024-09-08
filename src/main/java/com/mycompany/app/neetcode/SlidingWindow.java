@@ -170,38 +170,39 @@ public class SlidingWindow {
     
         return isValid ? s.substring(leftIdx, rightIdx + 1) : "";
     }
-    
 
     public static int[] maxSlidingWindow(int[] nums, int k) {
-       
-        if (nums == null || k <= 0) {
+        var n = nums.length;
+        var result = new int[n - k + 1];
+        var q = new ArrayDeque<Integer>(); //decreasing order
+        //Fail edge case immediately
+        if (k > n) {
             return new int[0];
         }
+        
+        var r = 0;
 
-        int n = nums.length;
-        int[] result = new int[n - k + 1];  // Result array to hold the maximum for each window
-        Deque<Integer> deque = new LinkedList<>();  // Deque to store indices of elements
-
-        for (int i = 0; i < nums.length; i++) {
-            // Remove indices that are out of the current window
-            if (!deque.isEmpty() && deque.peekFirst() < i - k + 1) {
-                deque.pollFirst();
+        while (r < n) {
+            //remove out of bounds indices, check the greatest val's index is in left most bounds, if not remove it
+            if (!q.isEmpty() && q.peekFirst() < r - k + 1) {
+                q.pollFirst();
             }
 
-            // Remove elements from the back of the deque if they are smaller than the current element
-            while (!deque.isEmpty() && nums[deque.peekLast()] < nums[i]) {
-                deque.pollLast();
+            //remove smaller elements
+            while (!q.isEmpty() && nums[r] > nums[q.peekLast()]) {
+                q.pollLast();
             }
 
-            // Add the current element's index to the deque
-            deque.offerLast(i);
+            //add our right most index
+            q.offerLast(r);
 
-            // Once the first k elements are processed, start adding the maximums to the result array
-            if (i >= k - 1) {
-                result[i - k + 1] = nums[deque.peekFirst()];
+            //check if r is within bounds of window, then add max value to the result array
+            if (r >= k -1) {
+                result[r - k + 1] = nums[q.peekFirst()];
             }
+            r++;
         }
-
         return result;
     }
+    
 }
