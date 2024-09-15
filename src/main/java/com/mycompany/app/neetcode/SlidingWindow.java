@@ -1,10 +1,8 @@
 package com.mycompany.app.neetcode;
 
 import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public class SlidingWindow {
     public static int maxProfit(int[] prices) {
